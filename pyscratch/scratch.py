@@ -633,7 +633,7 @@ class Scratch:
         zip_obj = ZipFile('./Project.sb3', 'w')
         open("./Project/project.json", "w+").write(json.dumps(self.project))
 
-        # Add the project,json any other assets the user put into ./Project
+        # Add the project json and any other assets the user put into ./Project
         for file in os.listdir("./Project"):
             zip_obj.write("./Project/" + file)
 
