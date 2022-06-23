@@ -1,0 +1,12 @@
+%import common.ESCAPED_STRING   -> STRING
+%import common.SIGNED_NUMBER    -> NUMBER
+%import common.WORD             -> WORD
+
+start: _NL? block+
+block: (WORD | param )+ | loop | _NL
+param: "(" ( block | NUMBER | STRING ) ")"
+loop: (WORD | param)+ "{" (block _NL?)+ "}" WORD?
+
+%import common.NEWLINE -> _NL
+%import common.WS_INLINE
+%ignore WS_INLINE
