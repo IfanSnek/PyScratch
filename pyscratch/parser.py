@@ -1,5 +1,11 @@
+"""
+parser.py
+====================================
+The script to parse a ScratchText file and use `scratch.py` to make an `.sb3` file.
+"""
+
 import pathlib
-from lark import Lark, Token
+from lark import Lark
 from lark import Transformer
 from pyscratch.scratch import Scratch, Block
 
@@ -20,9 +26,14 @@ def syntax_error(message):
 
 
 def find_function(block_name, block_args):
-    """This function returns the name of the Scratch class function from the ScratchText name, using the name_map
+    """
+    This function returns the name of the Scratch class function from the ScratchText name, using the `name_map`
     dictionary. If there is no such block name, an attempt to create/use a variable is made. If creating a variable
-    fails, a syntax error is thrown. """
+    fails, a syntax error is thrown.
+    :param block_name: Name of the block function is `Scratch.py`.
+    :param block_args: Arguments to supply to the function
+    :returns: A list with the function reference, and the formatted arguments.
+    """
 
     try:
         return name_map[block_name], block_args
@@ -195,8 +206,12 @@ class ScratchTextTransformer(Transformer):
 
 
 def parse(filepath):
-    """This function takes a file path, loads it, then sends it to the Lark parser. The resulting tree is then
-    sent to the ScratchTextTransformer where it is built into scratch blocks."""
+    """
+    This function takes a file path, loads it, then sends it to the Lark parser. The resulting tree is then
+    sent to the ScratchTextTransformer where it is built into scratch blocks.
+    :param filepath: Filepath of the file to parse
+    :return: String with all the opcodes that aren't nested.
+    """
     ebnf = open(str(pathlib.Path(__file__).parent.resolve()) + "/scratchtext.ebnf")
     scratchtext_parser = Lark(ebnf.read(), start='start', parser="lalr")
     transformer = ScratchTextTransformer()

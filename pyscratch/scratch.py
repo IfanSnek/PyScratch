@@ -1,3 +1,9 @@
+"""
+scratch.py
+====================================
+The script to create a `.sb3` file dynamically.
+"""
+
 import json
 import os
 from zipfile import ZipFile
@@ -61,7 +67,6 @@ class Scratch:
     There should only be one Scratch object used per project."""
 
     def __init__(self):
-
         # Here are some constants that make input data types easier to remember.
         self.number = 4
         self.positive_number = 5
@@ -87,37 +92,42 @@ class Scratch:
         # the project.json file where they are stored.
         self.variables = {}
 
-    """The format for a block creation function is like this for blocks with single parameters:
-    
+    """
+    The format for a block creation function is like this for blocks with single parameters:
+    ```
     def block_name(self, param):
         opcode = "category_opcode"
         paramtypes = [self.param_datatype]
         paramcategories = [1]
         return self.process_operator_single(opcode, paramtypes, paramcategories, param, "param_name")
-    
+    ```
     like this for block with multiple parameters:
-    
-     def block_name(self, param1, param2):
+    ```
+    def block_name(self, param1, param2):
         opcode = "category_opcode"
         paramtypes = [self.param1_datatype, self.param2_datatype]
         paramcategories = [1, 1]
-
-        return self.process_operator(opcode, paramtypes, paramcategories, param1, param2, "param_name_format")
         
+        return self.process_operator(opcode, paramtypes, paramcategories, param1, param2, "param_name_format")
+    ```
     and like this for block with no parameters:
-    
+    ```
     def blockname(self):
         opcode = "category_opcode"
         block = self.generate(opcode, [], [])
         return block
-        
-    Additionally, `block.is_top = True` can be added to event blocks. """
+    ```  
+    Additionally, `block.is_top = True` can be added to event blocks.
+    """
 
     ######################
     # Events
     ######################
 
     def greenflag(self):
+        """
+        :return: A Scratch Block for an On Green Flag Press block.
+        """
         opcode = "event_whenflagclicked"
         block = self.generate(opcode, [], [])
         block.is_top = True
@@ -128,24 +138,44 @@ class Scratch:
     ######################
 
     def movesteps(self, steps):
+        """
+        Make the sprite take a number of steps forward.
+        :param steps: The number of steps to walk.
+        :return: A Scratch Block for a Move Steps block.
+        """
         opcode = "motion_movesteps"
         paramtypes = [self.number]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, steps, "steps")
 
     def turnright(self, degrees):
+        """
+        Rotato the sprite clockwise.
+        :param degrees: The measure of degrees to turn clockwise.
+        :return: A Scratch Block for a Turn Right block.
+        """
         opcode = "motion_turnright"
         paramtypes = [self.number]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, degrees, "degrees")
 
     def turnleft(self, degrees):
+        """
+        Rotate the sprite counter-clockwise.
+        :param degrees: The measure of degrees to turn counter-clockwise.
+        :return: A Scratch Block for a Turn Left block.
+        """
         opcode = "motion_turnleft"
         paramtypes = [self.number]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, degrees, "degrees")
 
     def pointindirection(self, direction):
+        """
+        Point the sprite in a certain direction.
+        :param direction: The direction (in degrees) to have the sprite point in
+        :return: A Scratch Block for a Point in Direction block.
+        """
         opcode = "motion_pointindirection"
         paramtypes = [self.angle]
         paramcategories = [1]
@@ -156,30 +186,60 @@ class Scratch:
     ######################
 
     def wait(self, seconds):
+        """
+        Wait a number of seconds before continuing.
+        :param seconds: The number of seconds to wait.
+        :return: A Scratch Block for a Wait block.
+        """
         opcode = "control_wait"
         paramtypes = [self.positive_number]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, seconds, "duration")
 
     def repeat(self, times, substack):
+        """
+        Repeat the nested blocks a certain number of times.
+        :param times: The number of times to run.
+        :param substack: A list of Scratch Blocks to repeat over.
+        :return: A Scratch Block for a Repeat block.
+        """
         opcode = "control_repeat"
         paramtypes = [self.positive_integer]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, times, "times", nest=substack)
 
     def forever(self, substack):
+        """
+        Repeat the nested blocks forever.
+        :param substack: A list of Scratch Blocks to run forever.
+        :return: A Scratch Block for a Forever block.
+        """
         opcode = "control_forever"
         paramtypes = []
         paramcategories = [1]
         return self.generate(opcode, paramtypes, paramcategories, nest=substack)
 
     def if_(self, condition, substack):
+        """
+        Only run the nested blocks if `condition` is met.
+        :param condition: The condition needed to meet for the blocks in `substack` to run.
+        :param substack: A list of blocks to run if the condition is met.
+        :return: A Scratch Block for an If block.
+        """
         opcode = "control_if"
         paramtypes = [self.variable]
         paramcategories = [2]
         return self.process_params_single(opcode, paramtypes, paramcategories, condition, "condition", nest=substack)
 
     def if_else(self, condition, substack1, substack2):
+        """
+        Only run the nested blocks if `condition` is met.
+        :param condition: The condition needed to meet for the blocks in `substack` to run, otherwise the blocks in
+        `substack2` will be run.
+        :param substack1: A list of blocks to run if the condition is met.
+        :param substack2 A list of blocks to run if the condition is not met.
+        :return: A Scratch Block for an If/Else block.
+        """
         opcode = "control_if_else"
         paramtypes = [self.variable]
         paramcategories = [2]
@@ -187,19 +247,37 @@ class Scratch:
                                           nest2=substack2)
 
     def wait_until(self, condition):
+        """
+        Do not continue until `condition` is met.
+        :param condition: A boolean block, that when met, lets the program continue.
+        :return: A Scratch Block for a Wait Until block.
+        """
         opcode = "control_wait_until"
         paramtypes = [self.variable]
         paramcategories = [2]
         return self.process_params_single(opcode, paramtypes, paramcategories, [condition], "condition")
 
     def repeat_until(self, condition, substack):
+        """
+        Loop over the blocks in `substack` until `condition` is met.
+        :param condition: A boolean block, that when met, will cause the block in `substack` to stop repeating.
+        :param substack: A list of blocks to loop over until `condition` is met.
+        :return: A Scratch Block for a Repeat Until block.
+        """
         opcode = "control_repeat_until"
         paramtypes = [self.variable]
         paramcategories = [2]
         return self.process_params_single(opcode, paramtypes, paramcategories, [condition], "condition", nest=substack)
 
     def stop(self, stop_type):
-        """ Stop types: 'all', 'this script', 'other scripts in sprite'"""
+        """
+        Stop a specified portion of the program.
+        :param stop_type: One of:
+        * 'all'
+        * 'this script'
+        * 'other scripts in sprite'
+        :return: A Scratch Block for a Stop block.
+        """
         opcode = "control_stop"
         return self.generate(opcode, [], [], fields={"STOP_OPTION": [stop_type, None]})
 
@@ -208,6 +286,12 @@ class Scratch:
     ######################
 
     def lessthan(self, a, b):
+        """
+        A boolean block that will value true if `a` is less than `b`.
+        :param a: A number.
+        :param b: A number.
+        :return: A Scratch Block for a Less Than boolean.
+        """
         opcode = "operator_lt"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
@@ -215,6 +299,12 @@ class Scratch:
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
     def greaterthan(self, a, b):
+        """
+        A boolean block that will value true if `a` is greater than `b`.
+        :param a: A number.
+        :param b: A number.
+        :return: A Scratch Block for a Greater Than boolean.
+        """
         opcode = "operator_gt"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
@@ -222,6 +312,12 @@ class Scratch:
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
     def equals(self, a, b):
+        """
+        A boolean block that will value true if `a` is exactly the same as `b`.
+        :param a: A number.
+        :param b: A number.
+        :return: A Scratch Block for an Equals boolean.
+        """
         opcode = "operator_equals"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
@@ -229,68 +325,143 @@ class Scratch:
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
     def and_(self, a, b):
+        """
+        A boolean block that will value true if boolean `a` and `b` are both met.
+        :param a: Another boolean.
+        :param b: Another boolean.
+        :return: A Scratch Block for an And boolean.
+        """
         opcode = "operator_and"
         paramtypes = [self.variable, self.variable]
         paramcategories = [2, 2]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
     def or_(self, a, b):
+        """
+        A boolean block that will value true if either boolean `a` or `b` are met.
+        :param a: Another boolean.
+        :param b: Another boolean.
+        :return: A Scratch Block for an Or boolean.
+        """
         opcode = "operator_or"
         paramtypes = [self.variable, self.variable]
         paramcategories = [2, 2]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
     def not_(self, a):
+        """
+        A boolean block that will value the opposite value of `a`.
+        :param a: Another boolean.
+        :return: A Scratch Block for a Not boolean.
+        """
         opcode = "operator_not"
         paramtypes = [self.variable]
         paramcategories = [2]
         return self.process_params_single(opcode, paramtypes, paramcategories, a, "OPERAND")
 
     def add(self, a, b):
+        """
+        Finds the sum of two values.
+        :param a: One addend.
+        :param b: Another addend.
+        :return: A Scratch Block for an Add operator.
+        """
         opcode = "operator_add"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "NUM")
 
     def subtract(self, a, b):
+        """
+        Finds the difference of two values.
+        :param a: The minuend.
+        :param b: The subtrahend.
+        :return: A Scratch Block for a Subtraction operator.
+        """
         opcode = "operator_subtract"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "NUM")
 
     def multiply(self, a, b):
+        """
+        Finds the product of two values.
+        :param a: One factor.
+        :param b: Another factor.
+        :return: A Scratch Block for a Multiplication operator.
+        """
         opcode = "operator_multiply"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "NUM")
 
     def divide(self, a, b):
+        """
+        Finds the quotient of two values.
+        :param a: The dividend.
+        :param b: The divisor.
+        :return: A Scratch Block for a Division operator.
+        """
         opcode = "operator_divide"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "NUM")
 
     def random(self, a, b):
+        """
+        Chooses a random integer in the range of `a` to `b`.
+        :param a: Minimum result.
+        :param b: Maximum result.
+        :return: A Scratch Block for a random parameter.
+        """
         opcode = "operator_random"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "-from/to")
 
     def mod(self, a, b):
+        """
+        Finds the remeainder when `a` and `b` are divided.
+        :param a: The dividend.
+        :param b: The divisor.
+        :return: A Scratch Block for a parameter valuing the remainder.
+        """
         opcode = "operator_mod"
         paramtypes = [self.number, self.number]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "NUM")
 
     def round(self, a):
+        """
+        Rounds `a` to the nearest whole number.
+        :param a: A number
+        :return: A Scratch Block for a Round operator.
+        """
         opcode = "operator_round"
         paramtypes = [self.number]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, a, "NUM")
 
     def mathop(self, a, op_type):
-        """Special Math operators. op_type can be one of:
-        abs     floor    ceiling    sqrt     sin     cos     tan    asin    acos    atan     ln    log    e ^    10 ^"""
+        """
+        Computes a special math operation on 'a'.
+        :param a: A number
+        :param op_type: One of:
+        * 'abs'
+        * 'floor'
+        * 'ceiling'
+        * 'sqrt'
+        * 'sin'
+        * 'cos'
+        * 'tan'
+        * 'asin'
+        * 'acos'
+        * 'atan'
+        * 'ln'
+        * 'e ^'
+        * '10 ^'
+        :return: A Scratch Block for a special operator parameter.
+        """
         opcode = "operator_mathop"
         paramtypes = [self.number]
         paramcategories = [1]
@@ -298,24 +469,47 @@ class Scratch:
         return self.process_params_single(opcode, paramtypes, paramcategories, a, "NUM", fields)
 
     def join(self, a, b):
+        """
+        Concatenates two strings
+        :param a: Prefix string.
+        :param b: Suffix string.
+        :return: A Scratch Block for a Join operator.
+        """
         opcode = "operator_join"
         paramtypes = [self.string, self.string]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "STRING")
 
     def letter_of(self, letter, string):
+        """
+        Finds the nth letter of `string`.
+        :param letter: The index.
+        :param string: The sliced string.
+        :return: A Scratch Block for a Letter Of operator.
+        """
         opcode = "operator_letter_of"
         paramtypes = [self.number, self.string]
         paramcategories = [1, 1]
         return self.process_params(opcode, paramtypes, paramcategories, letter, string, "-letter/string")
 
     def length(self, a):
+        """
+        Finds the length of a string.
+        :param a: The in string.
+        :return: A Scratch Block for a parameter valuing the length of `a`.
+        """
         opcode = "operator_length"
         paramtypes = [self.string]
         paramcategories = [1]
         return self.process_params_single(opcode, paramtypes, paramcategories, a, "STRING")
 
     def contains(self, string, searchterm):
+        """
+        A boolean block that will value true if `searchterm` can be found within `string`.
+        :param string: A string.
+        :param searchterm: A string to look for within the other string.
+        :return: A Scratch Block for a Contains boolean.
+        """
         opcode = "operator_contains"
         paramtypes = [self.string, self.string]
         paramcategories = [1, 1]
@@ -326,9 +520,20 @@ class Scratch:
     ######################
 
     def variable_(self, variable_name):
+        """
+        Get a certain variable.
+        :param variable_name: The name of the variable to get.
+        :return: A list representing the variable in question.
+        """
         return [12, variable_name, str(self.get_variable(variable_name)) + "-" + variable_name]
 
     def setvariableto(self, variable_name, value):
+        """
+        Sets a certain variable's value.
+        :param variable_name: The name of the variable to set to a value.
+        :param value: The new value of the variable.
+        :return: A Scratch Block for a Set Variable To block.
+        """
         opcode = "data_setvariableto"
         paramtypes = [self.string]
         paramcategories = [1]
@@ -336,6 +541,12 @@ class Scratch:
         return self.process_params_single(opcode, paramtypes, paramcategories, value, "VALUE", fields)
 
     def changevariableby(self, variable_name, value):
+        """
+        Increments a certain variable by a certain amount.
+        :param variable_name: The name of the variable to increment.
+        :param value: The number to increment the variable by.
+        :return: A Scratch Block for a Change Variable By block.
+        """
         opcode = "data_changevariableby"
         paramtypes = [self.string]
         paramcategories = [1]
@@ -347,7 +558,11 @@ class Scratch:
     ######################
 
     def get_variable(self, variable_name):
-        """ This function will return the variable id for any given variable name."""
+        """
+        This function will return the variable id for the given `variable_name`.
+        :param variable_name: The name of the variable to get the id of.
+        :return: The id of the variable.
+        """
         for variable_id in self.variables.keys():
             if variable_id.endswith(variable_name):  # We use endswith because the variable format is `number-name`
                 return self.variables[variable_id]
@@ -358,13 +573,23 @@ class Scratch:
 
     def new_variable(self, variable_name, value):
         """ This function generates a variable id and adds it to the variable list. Variable format is
-        `uniquenumber-name` """
+        `uniquenumber-name`.
+        :param variable_name: The name for the new variable.
+        :param value: The initial value for the new variable.
+        :return:
+        """
         self.variables[str(self.variable_counter) + "-" + variable_name] = value
         self.variable_counter += 1
 
     def generate(self, opcode, paramtypes, paramcategories, **kwargs):
-        """ This function creates a block object out of all the data a block might need. paramtypes and paramcategories
-        are lists of the datatypes and param categories of the possible parameters."""
+        """
+        This function creates a block object out of all the data a block might need.
+        :param opcode: The scratch code string for the block.
+        :param paramtypes: A list of possible parameter type ids for the block.
+        :param paramcategories: A list of possible parameter category ids for the block.
+        :param kwargs: Key-value pairs for block attributes.
+        :return: A Scratch Block for the supplied attributes.
+        """
 
         # Because parameters are supplied as keyword args, we receive them here.
         params = dict(locals()['kwargs'])
@@ -406,11 +631,19 @@ class Scratch:
 
     def process_params_single(self, opcode, paramtypes, paramcategories, a, operand_name, fields=None, nest=None,
                               nest2=None):
-        """Blocks with a single parameter can easily call this function with their construction function to make
-        processing parameters simple. This function takes an opcode, the lists of the datatypes and param categories
-        of the possible parameters, the parameter value, operand format, and additional other attributes such as fields
-        and any nests."""
-
+        """
+        Blocks with a single parameter can easily call this function with their construction function to make
+        processing parameters simple.
+        :param opcode: The scratch code string for the block.
+        :param paramtypes: A list of possible parameter type ids for the block.
+        :param paramcategories: A list of possible parameter category ids for the block.
+        :param a: The parameter for the block.
+        :param operand_name: The name to put as the key in json attributes of the block.
+        :param fields: Attributes for the json fields of the block.
+        :param nest: A list of Scratch Blocks under this block.
+        :param nest2: Another list of Scratch Blocks under this block.
+        :return: A Scratch Block for the supplied attributes.
+        """
         # Initialize the parameter format override as none, because it might not get used later.
         override_name = None
 
@@ -446,10 +679,22 @@ class Scratch:
 
     def process_params(self, opcode, paramtypes, paramcategories, a, b, operand_name, fields=None, nest=None,
                        nest2=None):
-        """Blocks with a multiple parameters can easily call this function with their construction function to make
-        processing parameters simple. This function takes an opcode, the lists of the datatypes and param categories
-        of the possible parameters, the parameter values, operand format, and additional other attributes such as fields
-        and any nests."""
+        """
+        Blocks with a multiple parameters can easily call this function with their construction function to make
+        processing parameters simple.
+        :param opcode: The scratch code string for the block.
+        :param paramtypes: A list of possible parameter type ids for the block.
+        :param paramcategories: A list of possible parameter category ids for the block.
+        :param a: The first parameter for the block.
+        :param b: The second parameter for the block.
+        :param operand_name: The name to put as the key in json attributes of the block.
+        Will result as `operand_name1, operande_name2`, unless `operand_name` has a slash, which would make
+        it become `string_before_slash, string_after_slash`.
+        :param fields: Attributes for the json fields of the block.
+        :param nest: A list of Scratch Blocks under this block.
+        :param nest2: Another list of Scratch Blocks under this block.
+        :return: A Scratch Block for the supplied attributes.
+        """
 
         # Initialize the parameter format override as none, because it might not get used later.
         override_name = None
@@ -527,9 +772,11 @@ class Scratch:
         return block
 
     def stack(self, stack):
-        """ The stack function takes att the Scratch data and formats it to json that is readable by the Scratch GUI.
-        It then returns the id of the first block in the stack."""
-
+        """
+        Take att the Scratch data and format it to json that is readable by the Scratch GUI.
+        :param stack: A list of Scratch Blocks.
+        :return: the id of the first block in the stack.
+        """
         # We will keep track of the first block, so we can return its id.
         first_id = None
 
@@ -611,8 +858,10 @@ class Scratch:
         return [2, str(first_id)]
 
     def process_data(self):
-        """In the top of the project.json file, variables are stores. This makes sure the variables we were tracking
-        makes it there. """
+        """
+        In the top of the project.json file, variables are stores. This makes sure the variables we were tracking
+        makes it there.
+        """
 
         # Find the place in the json to put these
         var_section = self.project["targets"][0]["variables"]
@@ -623,8 +872,10 @@ class Scratch:
             var_section.update({var_id: [str(var_name), value]})
 
     def compile(self):
-        """This final function compiles all the json and dependencies to a .SB3 file."""
-
+        """
+        Compiles all the json and dependencies to a .SB3 file.
+        :return: the JSON for `project.json`.
+        """
         # Make sure the variables are included
         self.process_data()
 
