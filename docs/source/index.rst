@@ -1,15 +1,22 @@
 Welcome to PyScratch's documentation!
 =====================================
 
-.. automodule:: pyscratch.scratch
-    :members:
-
-.. automodule:: pyscratch.parser
-    :members:
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+PyScratch Dynamic Blocks:
+==================
+
+.. automodule:: pyscratch.scratch
+    :members:
+
+
+PyScratch ScratchText Parser:
+==================
+
+.. automodule:: pyscratch.parser
+    :members:
 
 Indices and tables
 ==================
