@@ -173,13 +173,13 @@ class Scratch:
         paramcategories = [1]
         return self.generate(opcode, paramtypes, paramcategories, nest=substack)
 
-    def _if(self, condition, substack):
+    def if_(self, condition, substack):
         opcode = "control_if"
         paramtypes = [self.variable]
         paramcategories = [2]
         return self.process_params_single(opcode, paramtypes, paramcategories, condition, "condition", nest=substack)
 
-    def _if_else(self, condition, substack1, substack2):
+    def if_else(self, condition, substack1, substack2):
         opcode = "control_if_else"
         paramtypes = [self.variable]
         paramcategories = [2]
@@ -228,19 +228,19 @@ class Scratch:
 
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
-    def _and(self, a, b):
+    def and_(self, a, b):
         opcode = "operator_and"
         paramtypes = [self.variable, self.variable]
         paramcategories = [2, 2]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
-    def _or(self, a, b):
+    def or_(self, a, b):
         opcode = "operator_or"
         paramtypes = [self.variable, self.variable]
         paramcategories = [2, 2]
         return self.process_params(opcode, paramtypes, paramcategories, a, b, "OPERAND")
 
-    def _not(self, a):
+    def not_(self, a):
         opcode = "operator_not"
         paramtypes = [self.variable]
         paramcategories = [2]
@@ -325,7 +325,7 @@ class Scratch:
     # Data
     ######################
 
-    def _variable(self, variable_name):
+    def variable_(self, variable_name):
         return [12, variable_name, str(self.get_variable(variable_name)) + "-" + variable_name]
 
     def setvariableto(self, variable_name, value):
@@ -487,7 +487,6 @@ class Scratch:
             if nest2 is not None:
                 kwargs["nest2"] = nest2
 
-
         else:
             # If the format for operand names is normal, we just do this.
 
@@ -531,7 +530,7 @@ class Scratch:
         """ The stack function takes att the Scratch data and formats it to json that is readable by the Scratch GUI.
         It then returns the id of the first block in the stack."""
 
-        # We will keep track of the first block so we can return its id.
+        # We will keep track of the first block, so we can return its id.
         first_id = None
 
         # We will also keep track of the latest, or previous block, in the loop below.
