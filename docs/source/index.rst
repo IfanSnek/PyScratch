@@ -1,7 +1,10 @@
 Welcome to PyScratch's documentation!
 =====================================
 
-.. automodule:: pyscratch.main
+.. automodule:: pyscratch.scratch
+    :members:
+
+.. automodule:: pyscratch.parser
     :members:
 
 .. toctree::

@@ -32,11 +32,485 @@
 
           <div class="body" role="main">
             
-  <section id="module-pyscratch.main">
-<span id="welcome-to-pyscratch-s-documentation"></span><h1>Welcome to PyScratch’s documentation!<a class="headerlink" href="#module-pyscratch.main" title="Permalink to this heading">¶</a></h1>
-<section id="main-py">
-<h2>main.py<a class="headerlink" href="#main-py" title="Permalink to this heading">¶</a></h2>
-<p>The command-line script for parsing ScratchText and turning it into Scratch Blocks</p>
+  <section id="module-pyscratch.scratch">
+<span id="welcome-to-pyscratch-s-documentation"></span><h1>Welcome to PyScratch’s documentation!<a class="headerlink" href="#module-pyscratch.scratch" title="Permalink to this heading">¶</a></h1>
+<section id="scratch-py">
+<h2>scratch.py<a class="headerlink" href="#scratch-py" title="Permalink to this heading">¶</a></h2>
+<p>The script to create a <cite>.sb3</cite> file dynamically.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyscratch.scratch.Block">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyscratch.scratch.</span></span><span class="sig-name descname"><span class="pre">Block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Block" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Block object represents a single Scratch block, whether it is a loop, event, or parameter. This object is
+responsible for containing different data about the Scratch block that can be accessed and modified by the Scratch
+class.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyscratch.scratch.</span></span><span class="sig-name descname"><span class="pre">Scratch</span></span><a class="headerlink" href="#pyscratch.scratch.Scratch" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Scratch object is responsible for managing the formatting, conversion, and creation of every block created.
+There should only be one Scratch object used per project.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the sum of two values.
+:param a: One addend.
+:param b: Another addend.
+:return: A Scratch Block for an Add operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.and_">
+<span class="sig-name descname"><span class="pre">and_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.and_" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value true if boolean <cite>a</cite> and <cite>b</cite> are both met.
+:param a: Another boolean.
+:param b: Another boolean.
+:return: A Scratch Block for an And boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.changevariableby">
+<span class="sig-name descname"><span class="pre">changevariableby</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.changevariableby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increments a certain variable by a certain amount.
+:param variable_name: The name of the variable to increment.
+:param value: The number to increment the variable by.
+:return: A Scratch Block for a Change Variable By block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.compile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compiles all the json and dependencies to a .SB3 file.
+:return: the JSON for <cite>project.json</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">searchterm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value true if <cite>searchterm</cite> can be found within <cite>string</cite>.
+:param string: A string.
+:param searchterm: A string to look for within the other string.
+:return: A Scratch Block for a Contains boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.divide">
+<span class="sig-name descname"><span class="pre">divide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.divide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the quotient of two values.
+:param a: The dividend.
+:param b: The divisor.
+:return: A Scratch Block for a Division operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.equals">
+<span class="sig-name descname"><span class="pre">equals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.equals" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value true if <cite>a</cite> is exactly the same as <cite>b</cite>.
+:param a: A number.
+:param b: A number.
+:return: A Scratch Block for an Equals boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.forever">
+<span class="sig-name descname"><span class="pre">forever</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substack</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.forever" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeat the nested blocks forever.
+:param substack: A list of Scratch Blocks to run forever.
+:return: A Scratch Block for a Forever block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramtypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramcategories</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a block object out of all the data a block might need.
+:param opcode: The scratch code string for the block.
+:param paramtypes: A list of possible parameter type ids for the block.
+:param paramcategories: A list of possible parameter category ids for the block.
+:param kwargs: Key-value pairs for block attributes.
+:return: A Scratch Block for the supplied attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.get_variable">
+<span class="sig-name descname"><span class="pre">get_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.get_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will return the variable id for the given <cite>variable_name</cite>.
+:param variable_name: The name of the variable to get the id of.
+:return: The id of the variable.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.greaterthan">
+<span class="sig-name descname"><span class="pre">greaterthan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.greaterthan" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value true if <cite>a</cite> is greater than <cite>b</cite>.
+:param a: A number.
+:param b: A number.
+:return: A Scratch Block for a Greater Than boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.greenflag">
+<span class="sig-name descname"><span class="pre">greenflag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.greenflag" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Scratch Block for an On Green Flag Press block.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.if_">
+<span class="sig-name descname"><span class="pre">if_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substack</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.if_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only run the nested blocks if <cite>condition</cite> is met.
+:param condition: The condition needed to meet for the blocks in <cite>substack</cite> to run.
+:param substack: A list of blocks to run if the condition is met.
+:return: A Scratch Block for an If block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.if_else">
+<span class="sig-name descname"><span class="pre">if_else</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substack1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substack2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.if_else" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only run the nested blocks if <cite>condition</cite> is met.
+:param condition: The condition needed to meet for the blocks in <cite>substack</cite> to run, otherwise the blocks in
+<cite>substack2</cite> will be run.
+:param substack1: A list of blocks to run if the condition is met.
+:param substack2 A list of blocks to run if the condition is not met.
+:return: A Scratch Block for an If/Else block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.join">
+<span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenates two strings
+:param a: Prefix string.
+:param b: Suffix string.
+:return: A Scratch Block for a Join operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the length of a string.
+:param a: The in string.
+:return: A Scratch Block for a parameter valuing the length of <cite>a</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.lessthan">
+<span class="sig-name descname"><span class="pre">lessthan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.lessthan" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value true if <cite>a</cite> is less than <cite>b</cite>.
+:param a: A number.
+:param b: A number.
+:return: A Scratch Block for a Less Than boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.letter_of">
+<span class="sig-name descname"><span class="pre">letter_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">letter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.letter_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the nth letter of <cite>string</cite>.
+:param letter: The index.
+:param string: The sliced string.
+:return: A Scratch Block for a Letter Of operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.mathop">
+<span class="sig-name descname"><span class="pre">mathop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.mathop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes a special math operation on ‘a’.
+:param a: A number
+:param op_type: One of:
+* ‘abs’
+* ‘floor’
+* ‘ceiling’
+* ‘sqrt’
+* ‘sin’
+* ‘cos’
+* ‘tan’
+* ‘asin’
+* ‘acos’
+* ‘atan’
+* ‘ln’
+* ‘e ^’
+* ‘10 ^’
+:return: A Scratch Block for a special operator parameter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.mod">
+<span class="sig-name descname"><span class="pre">mod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the remeainder when <cite>a</cite> and <cite>b</cite> are divided.
+:param a: The dividend.
+:param b: The divisor.
+:return: A Scratch Block for a parameter valuing the remainder.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.movesteps">
+<span class="sig-name descname"><span class="pre">movesteps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.movesteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the sprite take a number of steps forward.
+:param steps: The number of steps to walk.
+:return: A Scratch Block for a Move Steps block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.multiply">
+<span class="sig-name descname"><span class="pre">multiply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.multiply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the product of two values.
+:param a: One factor.
+:param b: Another factor.
+:return: A Scratch Block for a Multiplication operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.new_variable">
+<span class="sig-name descname"><span class="pre">new_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.new_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function generates a variable id and adds it to the variable list. Variable format is
+<cite>uniquenumber-name</cite>.
+:param variable_name: The name for the new variable.
+:param value: The initial value for the new variable.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.not_">
+<span class="sig-name descname"><span class="pre">not_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.not_" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value the opposite value of <cite>a</cite>.
+:param a: Another boolean.
+:return: A Scratch Block for a Not boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.or_">
+<span class="sig-name descname"><span class="pre">or_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.or_" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean block that will value true if either boolean <cite>a</cite> or <cite>b</cite> are met.
+:param a: Another boolean.
+:param b: Another boolean.
+:return: A Scratch Block for an Or boolean.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.pointindirection">
+<span class="sig-name descname"><span class="pre">pointindirection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.pointindirection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Point the sprite in a certain direction.
+:param direction: The direction (in degrees) to have the sprite point in
+:return: A Scratch Block for a Point in Direction block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.process_data">
+<span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.process_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>In the top of the project.json file, variables are stores. This makes sure the variables we were tracking
+makes it there.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.process_params">
+<span class="sig-name descname"><span class="pre">process_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramtypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramcategories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operand_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nest2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.process_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks with a multiple parameters can easily call this function with their construction function to make
+processing parameters simple.
+:param opcode: The scratch code string for the block.
+:param paramtypes: A list of possible parameter type ids for the block.
+:param paramcategories: A list of possible parameter category ids for the block.
+:param a: The first parameter for the block.
+:param b: The second parameter for the block.
+:param operand_name: The name to put as the key in json attributes of the block.
+Will result as <cite>operand_name1, operande_name2</cite>, unless <cite>operand_name</cite> has a slash, which would make
+it become <cite>string_before_slash, string_after_slash</cite>.
+:param fields: Attributes for the json fields of the block.
+:param nest: A list of Scratch Blocks under this block.
+:param nest2: Another list of Scratch Blocks under this block.
+:return: A Scratch Block for the supplied attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.process_params_single">
+<span class="sig-name descname"><span class="pre">process_params_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramtypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramcategories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operand_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nest2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.process_params_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks with a single parameter can easily call this function with their construction function to make
+processing parameters simple.
+:param opcode: The scratch code string for the block.
+:param paramtypes: A list of possible parameter type ids for the block.
+:param paramcategories: A list of possible parameter category ids for the block.
+:param a: The parameter for the block.
+:param operand_name: The name to put as the key in json attributes of the block.
+:param fields: Attributes for the json fields of the block.
+:param nest: A list of Scratch Blocks under this block.
+:param nest2: Another list of Scratch Blocks under this block.
+:return: A Scratch Block for the supplied attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.random">
+<span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chooses a random integer in the range of <cite>a</cite> to <cite>b</cite>.
+:param a: Minimum result.
+:param b: Maximum result.
+:return: A Scratch Block for a random parameter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.repeat">
+<span class="sig-name descname"><span class="pre">repeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substack</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.repeat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeat the nested blocks a certain number of times.
+:param times: The number of times to run.
+:param substack: A list of Scratch Blocks to repeat over.
+:return: A Scratch Block for a Repeat block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.repeat_until">
+<span class="sig-name descname"><span class="pre">repeat_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substack</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.repeat_until" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop over the blocks in <cite>substack</cite> until <cite>condition</cite> is met.
+:param condition: A boolean block, that when met, will cause the block in <cite>substack</cite> to stop repeating.
+:param substack: A list of blocks to loop over until <cite>condition</cite> is met.
+:return: A Scratch Block for a Repeat Until block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.round">
+<span class="sig-name descname"><span class="pre">round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.round" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rounds <cite>a</cite> to the nearest whole number.
+:param a: A number
+:return: A Scratch Block for a Round operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.setvariableto">
+<span class="sig-name descname"><span class="pre">setvariableto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.setvariableto" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a certain variable’s value.
+:param variable_name: The name of the variable to set to a value.
+:param value: The new value of the variable.
+:return: A Scratch Block for a Set Variable To block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.stack">
+<span class="sig-name descname"><span class="pre">stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stack</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take att the Scratch data and format it to json that is readable by the Scratch GUI.
+:param stack: A list of Scratch Blocks.
+:return: the id of the first block in the stack.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stop_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop a specified portion of the program.
+:param stop_type: One of:
+* ‘all’
+* ‘this script’
+* ‘other scripts in sprite’
+:return: A Scratch Block for a Stop block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.subtract">
+<span class="sig-name descname"><span class="pre">subtract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.subtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the difference of two values.
+:param a: The minuend.
+:param b: The subtrahend.
+:return: A Scratch Block for a Subtraction operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.turnleft">
+<span class="sig-name descname"><span class="pre">turnleft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.turnleft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotate the sprite counter-clockwise.
+:param degrees: The measure of degrees to turn counter-clockwise.
+:return: A Scratch Block for a Turn Left block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.turnright">
+<span class="sig-name descname"><span class="pre">turnright</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degrees</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.turnright" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotato the sprite clockwise.
+:param degrees: The measure of degrees to turn clockwise.
+:return: A Scratch Block for a Turn Right block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.variable_">
+<span class="sig-name descname"><span class="pre">variable_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.variable_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a certain variable.
+:param variable_name: The name of the variable to get.
+:return: A list representing the variable in question.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait a number of seconds before continuing.
+:param seconds: The number of seconds to wait.
+:return: A Scratch Block for a Wait block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.scratch.Scratch.wait_until">
+<span class="sig-name descname"><span class="pre">wait_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.scratch.Scratch.wait_until" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not continue until <cite>condition</cite> is met.
+:param condition: A boolean block, that when met, lets the program continue.
+:return: A Scratch Block for a Wait Until block.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<span class="target" id="module-pyscratch.parser"></span><section id="parser-py">
+<h2>parser.py<a class="headerlink" href="#parser-py" title="Permalink to this heading">¶</a></h2>
+<p>The script to parse a ScratchText file and use <cite>scratch.py</cite> to make an <cite>.sb3</cite> file.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyscratch.parser.ScratchTextTransformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyscratch.parser.</span></span><span class="sig-name descname"><span class="pre">ScratchTextTransformer</span></span><a class="headerlink" href="#pyscratch.parser.ScratchTextTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Scratch Text Transformer class is based on the Lark Transformer class, and has its method called
+when an EBNF rule with a corresponding rule is met. Each method is fed the items the EBNF rule accepts, and
+they get formatted and called with the PyScratch construction functions. The return values of these methods fill
+the place with the EBNF rules in the parser tree.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.parser.ScratchTextTransformer.block">
+<span class="sig-name descname"><span class="pre">block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.parser.ScratchTextTransformer.block" title="Permalink to this definition">¶</a></dt>
+<dd><p>A block is made of parameters and words. This function turns a ScratchText block into a Scratch block. See
+scratchtext.ebnf for more info.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.parser.ScratchTextTransformer.loop">
+<span class="sig-name descname"><span class="pre">loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.parser.ScratchTextTransformer.loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>A loop can be made of words, blocks, or param type tokens. A loop is converted to a Scratch block that
+supports nesting. See scratchtext.ebnf for more info.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.parser.ScratchTextTransformer.param">
+<span class="sig-name descname"><span class="pre">param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.parser.ScratchTextTransformer.param" title="Permalink to this definition">¶</a></dt>
+<dd><p>A parameter is made of combinations of blocks, words, and strings. See scratchtext.ebnf for more info.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyscratch.parser.ScratchTextTransformer.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.parser.ScratchTextTransformer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start is the entry point of the parser, so it is the last to be called. It’s items have already been
+formatted by the methods above. This will wrap up the usage of the Scratch class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyscratch.parser.find_function">
+<span class="sig-prename descclassname"><span class="pre">pyscratch.parser.</span></span><span class="sig-name descname"><span class="pre">find_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.parser.find_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the name of the Scratch class function from the ScratchText name, using the <cite>name_map</cite>
+dictionary. If there is no such block name, an attempt to create/use a variable is made. If creating a variable
+fails, a syntax error is thrown.
+:param block_name: Name of the block function is <cite>Scratch.py</cite>.
+:param block_args: Arguments to supply to the function
+:returns: A list with the function reference, and the formatted arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyscratch.parser.parse">
+<span class="sig-prename descclassname"><span class="pre">pyscratch.parser.</span></span><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyscratch.parser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes a file path, loads it, then sends it to the Lark parser. The resulting tree is then
+sent to the ScratchTextTransformer where it is built into scratch blocks.
+:param filepath: Filepath of the file to parse
+:return: String with all the opcodes that aren’t nested.</p>
+</dd></dl>
+
 </section>
 <div class="toctree-wrapper compound">
 </div>
