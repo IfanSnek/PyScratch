@@ -60,6 +60,7 @@ class ScratchTextTransformer(Transformer):
 
         # The stacked blocks of this loop will also be appended to when we find block trees.
         stack = []
+        stack2 = []  # For the if-else
 
         # Same with args, but for parameter tokens.
         args = []
@@ -70,13 +71,16 @@ class ScratchTextTransformer(Transformer):
                 # This will fail if 'item' is not a token.
                 if item.type == "WORD":
                     name += str(item)
-
             except AttributeError:
                 # If 'item' is not a token, it is either None, a Scratch Block, or a list of parameters.
                 if item is not None:
                     # If 'item' is a Scratch block, then this block is a parameter for this loop.
                     if type(item) == Block:
-                        stack.append(item)
+                        if stack:
+                            # The first stack is taken, put this in the second.
+                            stack2.append(item)
+                        else:
+                            stack.append(item)
 
                     # If item is a list, the list could either be a static parameter or a variable. Variables are
                     # represented by lists of three attributes.
@@ -94,8 +98,8 @@ class ScratchTextTransformer(Transformer):
         # We can use this name to find the actual function for the constructor.
         block_func = getattr(self.scratch, function_name)
 
-        # We then call that constructor with the args and nested blocks.
-        block = block_func(*args, stack)
+        # We then call that constructor with the args and nested blocks. Only supply stack2 if it is filled.
+        block = block_func(*args, *([stack, stack2] if stack2 else [stack]))
         return block
 
     def block(self, items):

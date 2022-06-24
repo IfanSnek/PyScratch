@@ -17,4 +17,4 @@ else:  # No args were supplied.
     print("\nIgnore this if you aren't running from CLI.")
     # Insert a custom filepath here:
     filepath = "./script.st"
-    scratch_paser.parse(filepath)
+    print(scratch_paser.parse(filepath))
