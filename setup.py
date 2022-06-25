@@ -20,5 +20,6 @@ setup(name='scratch-python',
       include_package_data=True,
       entry_points={
           'console_scripts': ['scratchtext=pyscratch.main:cli'],
-      }
+            },
+      install_requires=['lark~=1.1.2']
       )
