@@ -82,10 +82,16 @@ PyScratch is easy to get up and running!
 
 ### Installation with Pip
 
-* pip
+1. pip
   ```sh
   pip install scratch-python
   ```
+2. Copy the latest build environment from [releases](https://github.com/IfanSnek/PyScratch/releases) and unzip.
+
+3. Navigate to the build environment
+   ```sh
+   cd Project
+   ```
 
 ### Installation from Source
 
