@@ -8,7 +8,9 @@ def read(fname):
 
 setup(name='scratch-python',
       version='0.1.1-alpha',
-      description='A framework for creating scratch blocks and projects with python',
+      description='A framework for creating Scratch blocks and projects with Python.',
+      long_description_content_type="text/markdown",
+      long_description='README.md',
       author='Ethan Porcaro',
       author_email='ethan@ethanporcaro.com',
       license='MIT',
