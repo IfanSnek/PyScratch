@@ -80,26 +80,27 @@
 
 PyScratch is easy to get up and running!
 
-### Prerequisites
-
-First, install the required Python packages
+### Installation with Pip
 
 * pip
   ```sh
-  pip install lark --upgrade
+  pip install scratch-python
   ```
 
-### Installation
+### Installation from Source
 
 1. Clone the Repo
    ```sh
    git clone https://github.com/IfanSnek/PyScratch.git
    ```
-2. Navigate to the install directory
+2. Navigate to the installation directory
    ```sh
    cd PyScratch
    ```
-3. Open `script.st` in your preferred code editor.
+3. Install the package
+   ```sh
+   python setup.py install
+   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -158,8 +159,9 @@ stop ("all")  // Strings still need parenthesis.
 Write this into `script.st` and run:
 
 ```sh
-python main.py script.st
+scratchtext script.st
 ```
+
 
 You can now open [Scratch](https://scratch.mit.edu/projects/editor/), Go to `File > Load from your computer` and
 chose the generated `Project.sb3`.

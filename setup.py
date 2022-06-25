@@ -7,7 +7,7 @@ def read(fname):
 
 
 setup(name='scratch-python',
-      version='0.1.1-alpha',
+      version='0.1.2-alpha',
       description='A framework for creating Scratch blocks and projects with Python.',
       long_description_content_type="text/markdown",
       long_description='README.md',
