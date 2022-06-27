@@ -203,7 +203,7 @@ _For more examples, please refer to the [Documentation](https://pyscratch.readth
 - [x] Create a block-generating framework.
 - [x] Create a basic scripting language.
 - [x] Add a Pip package.
-- [ ] Add function and script importing support.
+- [x] Add function and script importing support.
 - [ ] Make operators easier to type (eg `a = 10` instead of `set (a) to (10)`).
 - [ ] Add the rest of the Scratch blocks.
 - [ ] Instant Scratch GUI project loading.
