@@ -158,6 +158,15 @@ repeat(2) {
 // So can operators
 turn left (add (add (add (add (add (add (1) and (1)) and (1)) and (1)) and (1)) and (1)) and (1)) degrees
 
+// Custom functions can be created with the 'def' keyword.
+def do (this) thing { // DO NOT USE PARAMETERS THAT ARE GLOBAL VARIABLES.
+    // Indentation is not required but it is good for visibility.
+    turn right (this) degrees
+}
+
+// The function can then be called like this
+do (2) thing
+
 // Dropdown blocks need to have their value explicitly stated
 stop ("all")  // Strings still need parenthesis.
 ```

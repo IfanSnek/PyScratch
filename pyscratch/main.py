@@ -10,7 +10,7 @@ import argparse
 def cli():
     parser = argparse.ArgumentParser(description='Compile ScratchText into a .sb3 file.')
     parser.add_argument('filepath', type=str, nargs=1, help='the path to the script to compile')
-    parser.add_argument("--print", "-p", dest='print_output', action='store_true', help="Print all unstacked blocks ("
+    parser.add_argument("--print", "-p", dest='print_output', action='store_true', help="Print all unnested blocks ("
                                                                                         "for debugging).")
 
     args = parser.parse_args()

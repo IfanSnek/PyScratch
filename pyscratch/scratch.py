@@ -156,6 +156,7 @@ class Scratch:
     def movesteps(self, steps):
         """
         Make the sprite take a number of steps forward.
+
         :param steps: The number of steps to walk.
         :return: A Scratch Block for a Move Steps block.
         """
@@ -166,7 +167,8 @@ class Scratch:
 
     def turnright(self, degrees):
         """
-        Rotato the sprite clockwise.
+        Rotate the sprite clockwise.
+
         :param degrees: The measure of degrees to turn clockwise.
         :return: A Scratch Block for a Turn Right block.
         """
@@ -178,6 +180,7 @@ class Scratch:
     def turnleft(self, degrees):
         """
         Rotate the sprite counter-clockwise.
+
         :param degrees: The measure of degrees to turn counter-clockwise.
         :return: A Scratch Block for a Turn Left block.
         """
@@ -189,6 +192,7 @@ class Scratch:
     def pointindirection(self, direction):
         """
         Point the sprite in a certain direction.
+
         :param direction: The direction (in degrees) to have the sprite point in
         :return: A Scratch Block for a Point in Direction block.
         """
@@ -204,6 +208,7 @@ class Scratch:
     def wait(self, seconds):
         """
         Wait a number of seconds before continuing.
+
         :param seconds: The number of seconds to wait.
         :return: A Scratch Block for a Wait block.
         """
@@ -215,6 +220,7 @@ class Scratch:
     def repeat(self, times, substack):
         """
         Repeat the nested blocks a certain number of times.
+
         :param times: The number of times to run.
         :param substack: A list of Scratch Blocks to repeat over.
         :return: A Scratch Block for a Repeat block.
@@ -227,6 +233,7 @@ class Scratch:
     def forever(self, substack):
         """
         Repeat the nested blocks forever.
+
         :param substack: A list of Scratch Blocks to run forever.
         :return: A Scratch Block for a Forever block.
         """
@@ -238,6 +245,7 @@ class Scratch:
     def if_(self, condition, substack):
         """
         Only run the nested blocks if `condition` is met.
+
         :param condition: The condition needed to meet for the blocks in `substack` to run.
         :param substack: A list of blocks to run if the condition is met.
         :return: A Scratch Block for an If block.
@@ -250,6 +258,7 @@ class Scratch:
     def if_else(self, condition, substack1, substack2):
         """
         Only run the nested blocks if `condition` is met.
+
         :param condition: The condition needed to meet for the blocks in `substack` to run, otherwise the blocks in
         `substack2` will be run.
         :param substack1: A list of blocks to run if the condition is met.
@@ -265,6 +274,7 @@ class Scratch:
     def wait_until(self, condition):
         """
         Do not continue until `condition` is met.
+
         :param condition: A boolean block, that when met, lets the program continue.
         :return: A Scratch Block for a Wait Until block.
         """
@@ -276,6 +286,7 @@ class Scratch:
     def repeat_until(self, condition, substack):
         """
         Loop over the blocks in `substack` until `condition` is met.
+
         :param condition: A boolean block, that when met, will cause the block in `substack` to stop repeating.
         :param substack: A list of blocks to loop over until `condition` is met.
         :return: A Scratch Block for a Repeat Until block.
@@ -288,6 +299,7 @@ class Scratch:
     def stop(self, stop_type):
         """
         Stop a specified portion of the program.
+
         :param stop_type: One of:
         * 'all'
         * 'this script'
@@ -304,6 +316,7 @@ class Scratch:
     def lessthan(self, a, b):
         """
         A boolean block that will value true if `a` is less than `b`.
+
         :param a: A number.
         :param b: A number.
         :return: A Scratch Block for a Less Than boolean.
@@ -317,6 +330,7 @@ class Scratch:
     def greaterthan(self, a, b):
         """
         A boolean block that will value true if `a` is greater than `b`.
+
         :param a: A number.
         :param b: A number.
         :return: A Scratch Block for a Greater Than boolean.
@@ -330,6 +344,7 @@ class Scratch:
     def equals(self, a, b):
         """
         A boolean block that will value true if `a` is exactly the same as `b`.
+
         :param a: A number.
         :param b: A number.
         :return: A Scratch Block for an Equals boolean.
@@ -343,6 +358,7 @@ class Scratch:
     def and_(self, a, b):
         """
         A boolean block that will value true if boolean `a` and `b` are both met.
+
         :param a: Another boolean.
         :param b: Another boolean.
         :return: A Scratch Block for an And boolean.
@@ -355,6 +371,7 @@ class Scratch:
     def or_(self, a, b):
         """
         A boolean block that will value true if either boolean `a` or `b` are met.
+
         :param a: Another boolean.
         :param b: Another boolean.
         :return: A Scratch Block for an Or boolean.
@@ -367,6 +384,7 @@ class Scratch:
     def not_(self, a):
         """
         A boolean block that will value the opposite value of `a`.
+
         :param a: Another boolean.
         :return: A Scratch Block for a Not boolean.
         """
@@ -378,6 +396,7 @@ class Scratch:
     def add(self, a, b):
         """
         Finds the sum of two values.
+
         :param a: One addend.
         :param b: Another addend.
         :return: A Scratch Block for an Add operator.
@@ -390,6 +409,7 @@ class Scratch:
     def subtract(self, a, b):
         """
         Finds the difference of two values.
+
         :param a: The minuend.
         :param b: The subtrahend.
         :return: A Scratch Block for a Subtraction operator.
@@ -402,6 +422,7 @@ class Scratch:
     def multiply(self, a, b):
         """
         Finds the product of two values.
+
         :param a: One factor.
         :param b: Another factor.
         :return: A Scratch Block for a Multiplication operator.
@@ -414,6 +435,7 @@ class Scratch:
     def divide(self, a, b):
         """
         Finds the quotient of two values.
+
         :param a: The dividend.
         :param b: The divisor.
         :return: A Scratch Block for a Division operator.
@@ -426,6 +448,7 @@ class Scratch:
     def random(self, a, b):
         """
         Chooses a random integer in the range of `a` to `b`.
+
         :param a: Minimum result.
         :param b: Maximum result.
         :return: A Scratch Block for a random parameter.
@@ -438,6 +461,7 @@ class Scratch:
     def mod(self, a, b):
         """
         Finds the remeainder when `a` and `b` are divided.
+
         :param a: The dividend.
         :param b: The divisor.
         :return: A Scratch Block for a parameter valuing the remainder.
@@ -450,6 +474,7 @@ class Scratch:
     def round(self, a):
         """
         Rounds `a` to the nearest whole number.
+
         :param a: A number
         :return: A Scratch Block for a Round operator.
         """
@@ -461,6 +486,7 @@ class Scratch:
     def mathop(self, a, op_type):
         """
         Computes a special math operation on 'a'.
+
         :param a: A number
         :param op_type: One of:
         * 'abs'
@@ -487,6 +513,7 @@ class Scratch:
     def join(self, a, b):
         """
         Concatenates two strings
+
         :param a: Prefix string.
         :param b: Suffix string.
         :return: A Scratch Block for a Join operator.
@@ -499,6 +526,7 @@ class Scratch:
     def letter_of(self, letter, string):
         """
         Finds the nth letter of `string`.
+
         :param letter: The index.
         :param string: The sliced string.
         :return: A Scratch Block for a Letter Of operator.
@@ -511,6 +539,7 @@ class Scratch:
     def length(self, a):
         """
         Finds the length of a string.
+
         :param a: The in string.
         :return: A Scratch Block for a parameter valuing the length of `a`.
         """
@@ -522,6 +551,7 @@ class Scratch:
     def contains(self, string, searchterm):
         """
         A boolean block that will value true if `searchterm` can be found within `string`.
+
         :param string: A string.
         :param searchterm: A string to look for within the other string.
         :return: A Scratch Block for a Contains boolean.
@@ -539,6 +569,7 @@ class Scratch:
         """
         Get a certain variable. If the variable does not exist, it will be created. If the variable exists as a function
         parameter, it will return that parameter.
+
         :param variable_name: The name of the variable to get.
         :return: A list representing the variable in question.
         """
@@ -547,6 +578,7 @@ class Scratch:
     def setvariableto(self, variable_name, value):
         """
         Sets a certain variable's value.
+
         :param variable_name: The name of the variable to set to a value.
         :param value: The new value of the variable.
         :return: A Scratch Block for a Set Variable To block.
@@ -560,6 +592,7 @@ class Scratch:
     def changevariableby(self, variable_name, value):
         """
         Increments a certain variable by a certain amount.
+
         :param variable_name: The name of the variable to increment.
         :param value: The number to increment the variable by.
         :return: A Scratch Block for a Change Variable By block.
@@ -577,6 +610,7 @@ class Scratch:
     def call(self, block_name, block_args):
         """
         Calls a custom block.
+
         :param block_name: Name if the block to call.
         :param block_args: A list of arguments to pass to the block.
         :return: A Scratch Block for a Call block.
@@ -725,6 +759,7 @@ class Scratch:
         """
         This function will return the variable id for the given `variable_name`. If the variable is local to a function,
         it will return a local parameter reference.
+
         :param variable_name: The name of the variable to get the id of.
         :return: The id of the variable.
         """
@@ -738,6 +773,7 @@ class Scratch:
 
     def new_variable(self, variable_name, value):
         """ This function generates a variable id and adds it to the variable list. Variable format is
+
         `uniquenumber-name`.
         :param variable_name: The name for the new variable.
         :param value: The initial value for the new variable.
@@ -750,6 +786,7 @@ class Scratch:
     def generate(self, opcode, paramtypes, paramcategories, **kwargs):
         """
         This function creates a block object out of all the data a block might need.
+
         :param opcode: The scratch code string for the block.
         :param paramtypes: A list of possible parameter type ids for the block.
         :param paramcategories: A list of possible parameter category ids for the block.
@@ -800,6 +837,7 @@ class Scratch:
         """
         Blocks with a single parameter can easily call this function with their construction function to make
         processing parameters simple.
+
         :param opcode: The scratch code string for the block.
         :param paramtypes: A list of possible parameter type ids for the block.
         :param paramcategories: A list of possible parameter category ids for the block.
@@ -848,6 +886,7 @@ class Scratch:
         """
         Blocks with a multiple parameters can easily call this function with their construction function to make
         processing parameters simple.
+
         :param opcode: The scratch code string for the block.
         :param paramtypes: A list of possible parameter type ids for the block.
         :param paramcategories: A list of possible parameter category ids for the block.
@@ -942,6 +981,7 @@ class Scratch:
     def stack(self, stack):
         """
         Take all the Scratch data and format it to json that is readable by the Scratch GUI.
+
         :param stack: A list of Scratch Blocks.
         :return: the id of the first block in the stack.
         """

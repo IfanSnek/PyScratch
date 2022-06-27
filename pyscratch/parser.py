@@ -21,7 +21,7 @@ with open(str(pathlib.Path(__file__).parent.resolve()) + "/block_name_mapping.cs
 
 
 def syntax_error(message):
-    print(message)
+    raise SyntaxError(message)
     return None
 
 
@@ -42,6 +42,7 @@ class ScratchTextTransformer(Transformer):
         This emthod returns the name of the Scratch class function from the ScratchText name, using the `name_map`
         dictionary. If there is no such block name, an attempt to create/use a variable is made. If creating a variable
         fails, a syntax error is thrown.
+
         :param block_name: Name of the block function is `Scratch.py`.
         :param block_args: Arguments to supply to the function
         :returns: A list with the function reference, and the formatted arguments.
@@ -233,6 +234,7 @@ def parse(filepath):
     """
     This function takes a file path, loads it, then sends it to the Lark parser. The resulting tree is then
     sent to the ScratchTextTransformer where it is built into scratch blocks.
+
     :param filepath: Filepath of the file to parse
     :return: String with all the opcodes that aren't nested.
     """
