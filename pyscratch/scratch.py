@@ -37,6 +37,12 @@ class Block:
         # top level blocks won't run unless attached to an event type block.
         self.is_top = False
 
+        # Shadow blocks are kinda weird, and barely used. They are blocks but not actually.
+        self.shadow = False
+
+        # Some shadow blocks have 'mutation' properties.
+        self.mutation = None
+
         # Some blocks, like control loops, can be a nest for other blocks. This boolean determines if this block is a
         # nest that contains other blocks or nests.
         self.is_nest = False
@@ -61,6 +67,10 @@ class Block:
         # the block have a custom input format.
         self.override_input = []
 
+        # The stack function should automatically relate all the blocks, but sometimes we need an override.
+        self.override_parent = None
+        self.override_next_block = None
+
 
 class Scratch:
     """The Scratch object is responsible for managing the formatting, conversion, and creation of every block created.
@@ -84,6 +94,8 @@ class Scratch:
         self.id_counter = 0
         self.stack_counter = 0
         self.variable_counter = 0
+        self.block_param_counter = 0
+        self.x_counter = 0
 
         # Load the json file with an empty project, that can be modified and saved with this program.
         self.project = json.loads(open("./Base/base.json").read())
@@ -91,6 +103,10 @@ class Scratch:
         # This dictionary contains a map of all the variables used, where that can be formatted and put in the top of
         # the project.json file where they are stored.
         self.variables = {}
+
+        # This will be a dictionary of custom block names and 1) The ids of the local parameters, and B) the proccode
+        # for the custom block.
+        self.block_variables = {}
 
     """
     The format for a block creation function is like this for blocks with single parameters:
@@ -521,7 +537,8 @@ class Scratch:
 
     def variable_(self, variable_name):
         """
-        Get a certain variable.
+        Get a certain variable. If the variable does not exist, it will be created. If the variable exists as a function
+        parameter, it will return that parameter.
         :param variable_name: The name of the variable to get.
         :return: A list representing the variable in question.
         """
@@ -557,9 +574,157 @@ class Scratch:
     # Utilities
     ######################
 
+    def call(self, block_name, block_args):
+        """
+        Calls a custom block.
+        :param block_name: Name if the block to call.
+        :param block_args: A list of arguments to pass to the block.
+        :return: A Scratch Block for a Call block.
+        """
+
+        # Gets the ids for the parameters of the block, as well ass the proccode for the block. The proccode is used to
+        # determine what types of parameters the block takes.
+        _, param_ids, proccode, _ = self.block_variables[block_name]
+
+        block = None
+
+        # If the block has just one parameter, we can use the process_params_single method.
+        if len(block_args) == 1:
+            # Creates a block out of the supplied arguments.
+            block = self.process_params_single("procedures_call", [self.number], [1], block_args[0],
+                                               str(param_ids[0]))
+
+        # If the block has more than one parameter, we use the process_params method.
+        elif len(block_args) > 1:
+            block = self.process_params("procedures_call", [self.number, self.number], [1, 1], block_args[0],
+                                        block_args[1], f"-{param_ids[0]}/{param_ids[1]}")
+
+        # Adjust the block's mutations so that it calls the correct function.
+        block.mutation = {
+            "tagName": "mutation",
+            "children": [],
+            "proccode": proccode,
+            "argumentids": str(param_ids).replace("'", "\""),
+            "warp": "false"
+        }
+
+        return block
+
+    def make_block(self, block_name, block_args, substack=None):
+        """
+        :param block_name: The name for the new block
+        :param block_args: A list of the supplied arguments.
+        :param substack: A list of blocks to add to the stack.
+        :return: A Scratch Block for a Custom Block definition.
+        """
+
+        if substack is None:
+            substack = []
+
+        # Allocates a block id for the block definition script
+        definition_id = self.id_counter
+        self.id_counter += 1
+
+        # Allocates a block id for the shadow of the definition script
+        shadow_id = self.id_counter
+        self.id_counter += 1
+
+        # Make a function definition block, and feed it the id of the shadow block we'll make later.
+        function_definition = Block(definition_id, "procedures_definition", {"custom_block": [1, str(shadow_id)]}, {})
+        function_definition.is_top = True  # Because the definition is the top block of the stack.
+
+        # Initialize a stack list with the definition block, as it will start the stack.
+        stack = [function_definition]
+
+        # This list will hold the id's of the parameters of the block.
+        param_ids = []
+
+        # This list holds the block id's of the shadows of the parameters. Note that these are block ids, and not
+        # parameter ids like the previous list.
+        shadow_arg_ids = []
+
+        # This list will hold the default values for the parameters.
+        defaults = []
+
+        # This list will hold the types of the parameters.
+        types = []
+
+        # Start proccode with the block name, and symbols representing the types of the parameters will be added later.
+        proccode = block_name
+
+        # This dictionary will hold the inputs for the block.
+        inputs = {}
+
+        for parameter_name in block_args:
+
+            # Update different variables depending on if the parameter name had `bool_` in it.
+            if "bool_" in str(parameter_name):
+                defaults.append("false")
+                types.append("boolean")
+                proccode += " %b"
+                parameter_type = "boolean"
+            else:
+                defaults.append("")
+                types.append("number or text")
+                proccode += " %s"
+                parameter_type = "string_number"
+
+            # Create a shadow block for the parameter.
+            param = Block(self.id_counter, f"argument_reporter_{parameter_type}", {}, {"VALUE": [parameter_name, None]})
+            param.shadow = True
+
+            # Add the shadow block to the stack.
+            stack.append(param)
+
+            # Add the current argument id to the dictionary of argument ids, with the argument shadow's id as the value.
+            inputs[str(self.block_param_counter)] = [1, str(self.id_counter)]
+
+            # Add the current argument id to the list of parameter ids.
+            param_ids.append(str(self.block_param_counter))
+
+            # Add the shadow's block id to the list of shadow parameter ids.
+            shadow_arg_ids.append(str(self.id_counter))
+
+            # Increment the block param counter.
+            self.id_counter += 1
+            self.block_param_counter += 1
+
+        # Add an entry to the block_variables dictionary for the block name, and a list of A) the parameter ids, and B)
+        # the proccode for the block.
+        self.block_variables[block_name] = [block_args, param_ids, proccode, shadow_arg_ids]
+
+        # Create a shadow block for the definition.
+        shadow = Block(shadow_id, "procedures_prototype", inputs, {})
+        shadow.shadow = True
+
+        # Mutate the shadow block to have the correct arguments and proccode.
+        shadow.mutation = {
+            "tagName": "mutation",
+            "children": [],
+            "proccode": proccode,
+            "argumentids": str(param_ids).replace("'", "\""),
+            "argumentnames": str(block_args).replace("'", "\""),
+            "argumentdefaults": str(defaults).replace("'", "\""),
+            "warp": False
+        }
+
+        # Add this shadow block to the stack.
+        stack.append(shadow)
+
+        # Update the relations of the newly created blocks to skip over some shadow blocks.
+        substack[0].override_parent = str(definition_id)
+        stack[0].override_next_block = str(substack[0].block_id)
+
+        # Add the blocks under the definition block to the stack.
+        stack += substack
+
+        # Stack the blocks.
+        self.stack(stack)
+
     def get_variable(self, variable_name):
         """
-        This function will return the variable id for the given `variable_name`.
+        This function will return the variable id for the given `variable_name`. If the variable is local to a function,
+        it will return a local parameter reference.
         :param variable_name: The name of the variable to get the id of.
         :return: The id of the variable.
         """
@@ -578,6 +743,7 @@ class Scratch:
         :param value: The initial value for the new variable.
         :return:
         """
+
         self.variables[str(self.variable_counter) + "-" + variable_name] = value
         self.variable_counter += 1
 
@@ -673,7 +839,7 @@ class Scratch:
         # Sometimes operators will have only one operand as another operator. This makes the compiler script think that
         # there is a single operand, and it should be just 'OPERAND' and not 'OPERAND1'. This overrides that behavior.
         if override_name is not None:
-            block.override_operand_name = override_name.upper()
+            block.override_operand_name = [override_name.upper()]
 
         return block
 
@@ -712,13 +878,13 @@ class Scratch:
             if type(a) == list:
                 paramtypes = [self.variable, paramtypes[1]]
                 paramcategories = [2, paramcategories[1]]
-                override_name = names[0]
+                override_name.append(names[0])
 
             # Same thing as above but for parameter b
             if type(b) == list:
                 paramtypes = [paramtypes[0], self.variable]
                 paramcategories = [paramcategories[0], 2]
-                override_name = names[1]
+                override_name.append(names[1])
 
             # Pass though the parameters to kwargs
             kwargs[names[0]] = a
@@ -738,16 +904,18 @@ class Scratch:
             # If we receive a list as a parameter, we are not receiving a value but instead a reference to another
             # block. If that happens, we override the parameter types and category to signify we now are using a block
             # reference for value.
+            override_name = []
+
             if type(a) == list:
                 paramtypes = [self.variable, paramtypes[1]]
                 paramcategories = [2, paramcategories[1]]
-                override_name = operand_name + "1"
+                override_name.append(operand_name + "1")
 
             # Same thing as above but for parameter b
             if type(b) == list:
                 paramtypes = [paramtypes[0], self.variable]
                 paramcategories = [paramcategories[0], 2]
-                override_name = operand_name + "2"
+                override_name.append(operand_name + "2")
 
             # Pass though the parameters to kwargs but with identifying numbers at the end of the names.
             kwargs[operand_name.upper() + "1"] = a
@@ -773,7 +941,7 @@ class Scratch:
 
     def stack(self, stack):
         """
-        Take att the Scratch data and format it to json that is readable by the Scratch GUI.
+        Take all the Scratch data and format it to json that is readable by the Scratch GUI.
         :param stack: A list of Scratch Blocks.
         :return: the id of the first block in the stack.
         """
@@ -785,13 +953,8 @@ class Scratch:
 
         # Loop over the length of the stack
         for i in range(len(stack)):
-            if stack[0] == 12:
-                # If we get 12 as the stack's first value, Then 'stack' not a stack, but a variable reference that
-                # looks like one. We just return that directly.
-                return [3, stack]
 
-            # Otherwise, we continue as normal. We make `block` become the reference to the current block we are
-            # formatting.
+            # Make `block` become the reference to the current block we are formatting.
             block = stack[i]
 
             # If the block is a nest, then we recursively stack the 'substack's.
@@ -804,22 +967,30 @@ class Scratch:
 
             # Block inputs won't be automatically added, so we do it here.
             if block.override_input:
-                if block.override_operand_name is not None:
-                    # If we have an override parameter set, then we recursively stack the input, and assign the returned
-                    # value to the json object, using the custom overridden name.
-                    block.inputs[block.override_operand_name] = self.stack(block.override_input[0])
+                for name, override_input in zip(block.override_operand_name, block.override_input):
+                    # If the input is a variable, make sure the variable name isn't supposed to be local, otherwise
+                    # we just add it as a global variable.
+                    if override_input[0] == 12:
+                        found_local = False
+                        # Loop over the local variables to see if this variable has the same name.
+                        for key, value in self.block_variables.items():
+                            for var_name, var_id in zip(value[0], value[3]):
+                                if var_name == override_input[1]:
+                                    # We found a local variable with the same name. Make it local
+                                    block.inputs[name] = [2, var_id]
+                                    found_local = True
+                                    # Delete the local variable from the list of global variables. Loop over
+                                    # self.variables, and find ones that end with var_name and remove them.
+                                    for key, value in list(self.variables.items()):
+                                        if key.endswith(var_name):
+                                            del self.variables[key]
 
-                elif len(block.override_input) > 0:
-                    try:
-                        # If we have custom input format (for booleans and variables), we attempt to use that possible
-                        # Boolean's format directly in the json object like this. We take the first item because the
-                        # boolean should just be wrapped in a list.
-                        block.inputs["CONDITION"] = self.stack(block.override_input[0])
+                        if not found_local:
+                            block.inputs[name] = [2, override_input]
 
-                    except TypeError:
-                        # If that fails, then the operand is probably a variable. and we take the direct override and
-                        # apply it to the json object.
-                        block.inputs["OPERAND"] = self.stack(block.override_input)
+                    # If the input is a block, we need to recursively stack it.
+                    elif type(override_input[0]) == Block:
+                        block.inputs[name] = self.stack(override_input)
 
             # On first loop keep track of the block, so we can return it later.
             if i == 0:
@@ -828,9 +999,18 @@ class Scratch:
             # Find the next block in the stack array. Make it none if we are out of array bounds. This will also apply
             # to the json.
             try:
-                next_block = stack[i + 1].block_id
+                next_block = str(stack[i + 1].block_id)
             except IndexError:
                 next_block = None
+
+            if block.shadow:
+                next_block = None
+                latest_block = None
+
+            if block.override_next_block:
+                next_block = str(block.override_next_block)
+            if block.override_parent:
+                latest_block = str(block.override_parent)
 
             #  Allocate space in the json file for this block
             block_section = self.project["targets"][1]["blocks"]
@@ -840,21 +1020,25 @@ class Scratch:
             block_section[block_id].update({"opcode": block.opcode})
 
             # Apply relations
-            block_section[block_id].update({"next": str(next_block)})
-            block_section[block_id].update({"parent": str(latest_block)})  # Latest_block will default as None.
+            block_section[block_id].update({"next": next_block})
+            block_section[block_id].update({"parent": latest_block})  # Latest_block will default as None.
 
             # First_stack_loops is the same, even in recursive calls. It will be set to true ont the first block call.
             block_section[block_id].update({"topLevel": block.is_top})
             if block.is_top:
-                block_section[block_id].update({"x": 50})
+                block_section[block_id].update({"x": self.x_counter})
+                self.x_counter += 500
                 block_section[block_id].update({"y": 50})
 
-            block_section[block_id].update({"shadow": False})
+            block_section[block_id].update({"shadow": block.shadow})
+            if block.mutation:
+                block_section[block_id].update({"mutation": block.mutation})
 
             # Finally, apply inputs and fields.
             block_section[block_id].update({"inputs": dict(block.inputs)})
             block_section[block_id].update({"fields": dict(block.fields)})
-            latest_block = block.block_id
+
+            latest_block = str(block.block_id)
         return [2, str(first_id)]
 
     def process_data(self):

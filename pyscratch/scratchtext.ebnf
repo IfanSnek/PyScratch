@@ -5,8 +5,15 @@
 // Our entry point, which parses a single file, if made up of as many blocks as needed
 start: block+
 
-// A block is either A) As many occurrences words or parameters as needed, B) A loop, or C) a newline
-block: (WORD | param)+ | loop | _NL
+// A block is either A) As many occurrences words or parameters as needed, B) A loop, or C) a newline or D) another file
+// or E) a function definition
+block: (WORD | param)+ | loop | _NL | file | definition
+
+// Import format
+file: "import" WORD
+
+// Definition format
+definition: "def" (WORD | ("(" /[a-zA-Z]+/ ")") )+ "{" (block _NL?)+ "}"
 
 // This defines the comment format
 COMMENT: "//" /(.)+/

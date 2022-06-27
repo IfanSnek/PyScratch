@@ -19,3 +19,9 @@ def cli():
         result = scratch_paser.parse(args.filepath[0])
         if args.print_output:
             print(result)
+
+if __name__ == "__main__":
+    import os
+
+    os.chdir("..")
+    print(scratch_paser.parse("script.st"))

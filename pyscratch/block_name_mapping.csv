@@ -17,10 +17,10 @@ equals,equals
 and,and_
 or,or_
 not,not_
-addand,add
-subtractand,subtract
-mutiply,multiply
-divideand,divide
+addto,add
+subtractfrom,subtract
+mutiplyand,multiply
+dividefrom,divide
 pickrandomto,random
 mod,mod
 round,round

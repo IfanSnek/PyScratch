@@ -25,31 +25,6 @@ def syntax_error(message):
     return None
 
 
-def find_function(block_name, block_args):
-    """
-    This function returns the name of the Scratch class function from the ScratchText name, using the `name_map`
-    dictionary. If there is no such block name, an attempt to create/use a variable is made. If creating a variable
-    fails, a syntax error is thrown.
-    :param block_name: Name of the block function is `Scratch.py`.
-    :param block_args: Arguments to supply to the function
-    :returns: A list with the function reference, and the formatted arguments.
-    """
-
-    try:
-        return name_map[block_name], block_args
-    except KeyError:
-        if block_args:  # If we receive arguments, we are likely trying to set a variable.
-            try:
-                if type(block_args[0]) == list:
-                    return "setvariableto", [block_name, block_args[0]]
-            except IndexError:
-                return syntax_error(f"The block name '{block_name}' with args '{block_args}' doesn't exist, and isn't "
-                                    f"used in variable format.")
-        else:
-            # If we don't get arguments, then we are likely getting a variable.
-            return "variable_", [block_name]
-
-
 class ScratchTextTransformer(Transformer):
     """The Scratch Text Transformer class is based on the Lark Transformer class, and has its method called
     when an EBNF rule with a corresponding rule is met. Each method is fed the items the EBNF rule accepts, and
@@ -61,6 +36,55 @@ class ScratchTextTransformer(Transformer):
 
         # Supply a PyScratch Scratch Class for the rest of this transformer class to use.
         self.scratch = Scratch()
+
+    def find_function(self, block_name, block_args):
+        """
+        This emthod returns the name of the Scratch class function from the ScratchText name, using the `name_map`
+        dictionary. If there is no such block name, an attempt to create/use a variable is made. If creating a variable
+        fails, a syntax error is thrown.
+        :param block_name: Name of the block function is `Scratch.py`.
+        :param block_args: Arguments to supply to the function
+        :returns: A list with the function reference, and the formatted arguments.
+        """
+        try:
+            return name_map[block_name], block_args
+        except KeyError:
+            if block_args:  # If we receive arguments, we are likely trying to set a variable or call a function.
+                    if type(block_args[0]) == list:
+                        # Set variable
+                        return "setvariableto", [block_name, block_args]
+                    else:
+                        # Call a function
+                        return "call", [block_name, block_args]
+            else:
+                return "variable_", [block_name]
+
+    def definition(self, items):
+        """ A custom function holding blocks """
+
+        # The name of this definition block will be appended to every time there is a word token in 'items'.
+        name = ""
+
+        # The stacked blocks of this definition will also be appended to when we find block trees.
+        stack = []
+
+        # Same with args, but for parameter tokens.
+        args = []
+
+        for item in items:
+            try:
+                # We try to get the type of the token to see if it is a word we can concatenate to the block name.
+                # This will fail if 'item' is not a token.
+                if item.type == "WORD":
+                    name += str(item)
+                else:
+                    args.append(str(item))
+            except AttributeError:
+                # If 'item' is not a token, it is either None, or nested blocks.
+                if item is not None:
+                    # Nested stack
+                    stack.append(item)
+        self.scratch.make_block(name, args, stack)
 
     def loop(self, items):
         """ A loop can be made of words, blocks, or param type tokens. A loop is converted to a Scratch block that
@@ -104,7 +128,7 @@ class ScratchTextTransformer(Transformer):
                             args.append(item[0])
 
         # Now that we have accumulated all the needed data, we can find the Scratch constructor name for this block.
-        function_name, args = find_function(name, args)
+        function_name, args = self.find_function(name, args)
 
         # We can use this name to find the actual function for the constructor.
         block_func = getattr(self.scratch, function_name)
@@ -150,11 +174,11 @@ class ScratchTextTransformer(Transformer):
                                 args.append(item[0])
 
         # The 'block' was actually a newline
-        elif name == "":
+        if name == "":
             return
 
         # Now that we have accumulated all the needed data, we can find the Scratch constructor name for this block.
-        function_name, args = find_function(name, args)
+        function_name, args = self.find_function(name, args)
 
         # We can use this name to find the actual function for the constructor.
         block_func = getattr(self.scratch, function_name)
