@@ -121,13 +121,22 @@ Here is basic usage for the ScratchText language.
 ```text
 // Currently, there is only support for single line comments
 
+// Import the other file
+include module.st
+
+// USe a function from the other file
+back walk (10) steps
+
+// Start a new stack
+when green flag pressed
+
 // Variables can be set like this. Note that any parameter must be surrounded by parenthesis.
 set (health) to (10)
 
 // Blocks are typed as they are seen in Scratch
 move (10) steps // Just remember to use parentheses for values.
 
-// You can also put variables anywhere
+// You can also put variable randomly. They will start at 0.
 move (health) steps
 
 // You can even call an undefined variable and it will start at 0

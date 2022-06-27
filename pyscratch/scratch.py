@@ -575,17 +575,18 @@ class Scratch:
         """
         return [12, variable_name, str(self.get_variable(variable_name)) + "-" + variable_name]
 
-    def setvariableto(self, variable_name, value):
+    def setvariableto(self, variable, value):
         """
         Sets a certain variable's value.
 
-        :param variable_name: The name of the variable to set to a value.
+        :param variable: A variable format list.
         :param value: The new value of the variable.
         :return: A Scratch Block for a Set Variable To block.
         """
         opcode = "data_setvariableto"
         paramtypes = [self.string]
         paramcategories = [1]
+        variable_name = variable[1]
         fields = {"VARIABLE": [variable_name, self.get_variable(variable_name)]}
         return self.process_params_single(opcode, paramtypes, paramcategories, value, "VALUE", fields)
 

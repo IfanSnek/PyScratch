@@ -1,3 +1,4 @@
+whengreenflagpressed,greenflag
 movesteps,movesteps
 turnrightdegrees,turnright
 turnleftdegrees,turnleft
@@ -18,9 +19,9 @@ and,and_
 or,or_
 not,not_
 addand,add
-subtractfrom,subtract
+subtractby,subtract
 mutiplyand,multiply
-dividefrom,divide
+divideby,divide
 pickrandomto,random
 mod,mod
 round,round

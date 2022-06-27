@@ -5,8 +5,10 @@ The script to parse a ScratchText file and use `scratch.py` to make an `.sb3` fi
 """
 
 import pathlib
+import re
+
 from lark import Lark
-from lark import Transformer
+from lark import Transformer, Token
 from pyscratch.scratch import Scratch, Block
 
 name_map = {}
@@ -22,7 +24,6 @@ with open(str(pathlib.Path(__file__).parent.resolve()) + "/block_name_mapping.cs
 
 def syntax_error(message):
     raise SyntaxError(message)
-    return None
 
 
 class ScratchTextTransformer(Transformer):
@@ -47,16 +48,22 @@ class ScratchTextTransformer(Transformer):
         :param block_args: Arguments to supply to the function
         :returns: A list with the function reference, and the formatted arguments.
         """
+
+        if block_name == "setto":
+            # We were explicitly told to set a variable to a value.
+            # If the block is setto, the first argument is the variable name, and the second is the value.
+            return "setvariableto", [block_args[0], block_args[1]]
+
         try:
             return name_map[block_name], block_args
         except KeyError:
             if block_args:  # If we receive arguments, we are likely trying to set a variable or call a function.
-                    if type(block_args[0]) == list:
-                        # Set variable
-                        return "setvariableto", [block_name, block_args]
-                    else:
-                        # Call a function
-                        return "call", [block_name, block_args]
+                if type(block_args[0]) == list:
+                    # Set variable
+                    return "setvariableto", [block_name, block_args]
+                else:
+                    # Call a function
+                    return "call", [block_name, block_args]
             else:
                 return "variable_", [block_name]
 
@@ -186,6 +193,7 @@ class ScratchTextTransformer(Transformer):
 
         # We then call that constructor with the args and nested blocks.
         block = block_func(*args)
+        
         return block
 
     def param(self, items):
@@ -217,7 +225,7 @@ class ScratchTextTransformer(Transformer):
 
         # Initialize the stack with a green flag block, then loop over all the immediate children and append them to
         # the stack.
-        stack = [self.scratch.greenflag()]
+        stack = []
         for item in items:
             if item is not None:
                 stack.append(item)
@@ -226,7 +234,7 @@ class ScratchTextTransformer(Transformer):
         self.scratch.stack(stack)
         self.scratch.compile()
 
-        # Return all the opcodes for optional debuging.
+        # Return all the opcodes for optional debugging.
         return " ".join(item.opcode for item in stack)
 
 
@@ -238,7 +246,24 @@ def parse(filepath):
     :param filepath: Filepath of the file to parse
     :return: String with all the opcodes that aren't nested.
     """
-    ebnf = open(str(pathlib.Path(__file__).parent.resolve()) + "/scratchtext.ebnf")
-    scratchtext_parser = Lark(ebnf.read(), start='start', parser="lalr")
+
+    # Load the code file and walk through dependencies.
+    code = ""
+    with open(filepath, "r") as f:
+        text = f.read()
+        for line in text.split("\n"):
+            if line.startswith("include"):
+                line = re.sub(r"\/\/[^\n]*", "", line)
+                imports = open(line[8:], "r").read()
+                code += imports + "\n"
+            else:
+                code += line + "\n"
+
+    # Parse the code and send it to the ScratchTextTransformer.
+    scratchtext_parser = Lark(open(str(pathlib.Path(__file__).parent.resolve()) + "/scratchtext.ebnf"),
+                              start='start', parser="lalr")
     transformer = ScratchTextTransformer()
-    return transformer.transform(scratchtext_parser.parse(open(filepath).read()))
+    result = transformer.transform(scratchtext_parser.parse(code))
+
+    # Return the opcodes for debugging
+    return result
